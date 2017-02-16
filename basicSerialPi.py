@@ -13,10 +13,35 @@ ser = serial.Serial(
     bytesize=serial.EIGHTBITS,
     timeout=5
 )
-counter=0
+
+def fnParse():
+    while True:
+
+        response = ser.readline()
+        #print("read data: {}".format(response.decode()))
+
+        if 'money' in response.decode():
+            print("you're rich!")
+        else:
+            print("you're poor")
 
 
-while 1:
-    ser.write('Write counter: %d \n'%(counter))
-    time.sleep(1)
-    counter += 1
+if ser.isOpen():
+
+    ser.flushInput() #flush input buffer, discarding all its contents
+    ser.flushOutput()#flush output buffer, aborting current output
+
+    ser.write(b"started, insert commands here\r\n")
+    #print("write data: ATI")
+    time.sleep(0.5)
+    numberOfLine = 0
+
+    fnParse()
+
+else:
+    try:
+        ser.open()
+        fnParse()
+    exception:
+        print('serial not found')
+        exit()
